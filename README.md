@@ -27,8 +27,7 @@ In this lab I bought a real domain (`ardypascual.site`) and replaced the default
 
 ## 1. Lab Environment
 
-| Component | Details |<img width="1891" height="950" alt="Namecheap" src="https://github.com/user-attachments/assets/9415ce18-14c0-4775-81bc-ee5c2f9d7c07" />
-
+| Component | Details |
 |---|---|
 | Hypervisor host | Windows 11 Pro running Hyper-V (`ARDYWIN11PC`) |
 | Domain Controller | `DC-SERVER2026`, Windows Server 2025, domain `EvilCorp.com` |
@@ -66,8 +65,7 @@ Entra Connect sync ──► users and mailbox use @ardypascual.site
 
 I registered **ardypascual.site** on Namecheap. In the Domain List the domain shows as **Active**, with Domain Privacy protection **ON**. Expiry is **Oct 22, 2027** (1-year registration) and **Auto-Renew is off**, so I need to renew it manually if I want to keep it.
 
-<img width="1891" height="950" alt="Namecheap" src="https://github.com/user-attachments/assets/27c2a23d-9ad6-4879-a721-4d488c8f28b6" />
-
+![Namecheap domain list showing ardypascual.site active](Namecheap.jpg)
 
 *Namecheap Domain List: `ardypascual.site` is Active. Behind the page you can see the Microsoft 365 "Verify" step waiting for the TXT record.*
 
@@ -83,8 +81,7 @@ In the **Microsoft 365 admin center → Settings → Domains → Add domain**, I
 | **CNAME** | `autodiscover` | `autodiscover.outlook.com.` | n/a | 1 Hour |
 | **TXT** (SPF) | `@` | `v=spf1 include:spf.protection.outlook.com -all` | n/a | 1 Hour |
 
-<img width="1902" height="958" alt="setting up mx record etc" src="https://github.com/user-attachments/assets/554a4c43-e393-4943-8a59-83e60bca2b3a" />
-
+![Microsoft 365 admin center Add DNS records page with MX, CNAME and TXT](setting%20up%20mx%20record%20etc.jpg)
 
 *Microsoft 365 admin center, "Add DNS records": the exact MX, CNAME and TXT values to copy into Namecheap.*
 
@@ -115,8 +112,7 @@ I added the records under **HOST RECORDS**:
 
 Namecheap also created two default records when the domain was registered: a `www` **CNAME** to `parkingpage.namecheap.com.` and a **URL Redirect** for `@`. These are the parking-page defaults and are not needed for email. They can be left alone or removed once the domain hosts a real website.
 
-<img width="1902" height="962" alt="setupcompleted 2" src="https://github.com/user-attachments/assets/875f71a4-8f30-46da-87af-f77a51e9974a" />
-
+![Namecheap Advanced DNS host records with TXT, CNAME and SPF](setup%20completed.jpg)
 
 *Namecheap Advanced DNS: the verification TXT, the `autodiscover` CNAME and the SPF TXT are in place, with the MX record visible at the bottom under Mail Settings.*
 
@@ -130,8 +126,7 @@ Namecheap handles MX records separately from host records. Under **MAIL SETTINGS
 
 Then I clicked **SAVE ALL CHANGES**.
 
-<img width="1902" height="958" alt="adding mxrecord" src="https://github.com/user-attachments/assets/c87eb5d5-2b53-432a-8ca9-c655e0b4035d" />
-
+![Namecheap Mail Settings set to Custom MX with the Microsoft MX record](adding%20mxrecord.jpg)
 
 *Namecheap Mail Settings set to "Custom MX", with the Exchange Online MX record added.*
 
@@ -146,8 +141,8 @@ Then I clicked **SAVE ALL CHANGES**.
 ## Step 4: Finish Domain Setup in Microsoft 365
 
 After the records propagated, I returned to the wizard, clicked **Verify** and then **Continue**. Microsoft checked the DNS and showed **"Domain setup is complete"**: `ardypascual.site` is now ready to manage from the Domains list and can be used for users' email addresses and aliases.
-<img width="1902" height="962" alt="setupcompleted 2" src="https://github.com/user-attachments/assets/6ccce5d9-fd02-4414-b3f7-4d0b7a5c29a4" />
 
+![Microsoft 365 admin center showing Domain setup is complete](setupcompleted%202.jpg)
 
 *"Domain setup is complete": all three wizard steps (Add domain, Connect domain, Finish) are green.*
 
@@ -157,8 +152,7 @@ After the records propagated, I returned to the wizard, clicked **Verify** and t
 
 In the **Microsoft Entra admin center → Home**, the tenant card (`evilcorp`) now shows **Primary domain: `ardypascual.site`**. The tenant also shows 217 users, 12 groups, 5 devices and 5 apps, and I am signed in as the Global Administrator.
 
-<img width="1277" height="947" alt="domain updated" src="https://github.com/user-attachments/assets/a6eea1f4-e885-4aa5-8cbb-7c4db909ed6e" />
-
+![Microsoft Entra admin center showing primary domain ardypascual.site](domain%20updated.jpg)
 
 *Entra admin center confirming `ardypascual.site` as the tenant's primary domain (highlighted).*
 
@@ -177,7 +171,7 @@ On `DC-SERVER2026`:
 3. On the **UPN Suffixes** tab, type `ardypascual.site` under *Alternative UPN suffixes*.
 4. Click **Add**, then **Apply** and **OK**.
 
-!<img width="1273" height="947" alt="adding domain onprem" src="https://github.com/user-attachments/assets/2568d05d-50f2-4335-bc81-367d8282697f" />
+![Adding ardypascual.site as an alternative UPN suffix in AD Domains and Trusts](adding%20domain%20onprem.jpg)
 
 *Typing `ardypascual.site` into the Alternative UPN suffixes box (existing suffix: `evilcorpLAB.onmicrosoft.com`).*
 
@@ -190,16 +184,16 @@ Adding the suffix does not change any user. Each user's UPN must be changed to u
 ### 7.1 Single account: my admin account
 
 In **Active Directory Users and Computers → `_Admins`**, I opened my admin account's properties. On the **Account** tab I changed the **User logon name** dropdown to `@ardypascual.site`. The pre-Windows 2000 name (`EVILCORP\a-abpascual`) does not change, so legacy logon still works.
-<img width="1277" height="947" alt="setting up new domain" src="https://github.com/user-attachments/assets/2cc0adf7-3a69-449f-8354-399a2008f43e" />
 
+![ADUC account tab showing the user logon name with @ardypascual.site](setting%20up%20new%20domain.jpg)
 
 *Admin account `a-abpascual` now uses the `@ardypascual.site` UPN suffix.*
 
 ### 7.2 Batch change: the whole IT Department OU
 
 Changing users one by one does not scale. In **Active Directory Administrative Center**, I opened the `_ITDepartment` OU (13 objects), selected the 12 user accounts (the `IT-Share` group was left out), right-clicked and chose **Properties**. This opens the **Multiple Users** editor. I ticked **Logon UPN suffix** and selected `ardypascual.site`, then clicked **OK**.
-<img width="1277" height="947" alt="batch Upn changed IT dept" src="https://github.com/user-attachments/assets/30432a0e-fd05-424b-ac00-9f7eea543ed8" />
 
+![AD Administrative Center multiple users edit setting Logon UPN suffix to ardypascual.site](batch%20Upn%20changed%20IT%20dept.jpg)
 
 *Batch update: 12 IT Department users switched to `@ardypascual.site` in one operation.*
 
@@ -219,8 +213,7 @@ Start-ADSyncSyncCycle -PolicyType Delta
 
 In Outlook on the web, the account card now shows **ardy@ardypascual.site**. The mailbox is receiving mail on the new domain, so the MX, autodiscover and SPF records are working.
 
-<img width="1915" height="971" alt="new mxname already updated" src="https://github.com/user-attachments/assets/968cb044-cc8a-4dac-a4fc-40826359acab" />
-
+![Outlook showing the signed-in account as ardy@ardypascual.site](new%20mxname%20already%20updated.jpg)
 
 *Outlook (web) signed in as `ardy@ardypascual.site`.*
 
